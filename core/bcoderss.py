@@ -9,18 +9,17 @@ headers = {
 }
 
 
-def get_random_img_url(tag, page):
+def get_random_img_url(tags, page=1):
+    tag = tags[random.randint(0, len(tags))-1]
     url = url_base.format(tag, page)
     img_arr_page_res = requests.get(url=url, headers=headers)
     img_arr_page_selector = parsel.Selector(img_arr_page_res.text)
     img_urls = img_arr_page_selector.css('#main a::attr(href)').getall()
 
-    img_page_url = img_urls[random.randint(0, len(img_urls))]
+    img_page_url = img_urls[random.randint(0, len(img_urls)-1)]
     img_page_res = requests.get(url=img_page_url, headers=headers)
 
     img_selector = parsel.Selector(img_page_res.text)
     img = img_selector.xpath('/html/body/div[4]/img').getall()[0]
 
     return img.split('src="')[1].split('"')[0]
-
-

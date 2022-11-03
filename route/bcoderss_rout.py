@@ -5,14 +5,14 @@ import core.bcoderss as bcoderss
 bcoderss_route = Blueprint('bcoderss_route', __name__)
 
 fields = {
-    "tag": Rule(type=str, required=True, dest="tag"),
-    "page": Rule(type=int, required=True, dest="page"),
+    "tags": Rule(type=list, required=False, dest="tags"),
+    "page": Rule(type=int, required=False, dest="page"),
 }
 
 
 @bcoderss_route.route("/bcoderss/get_random_img_url", methods=["GET"])
 @pre.catch(fields)
 def get_random_img_url():
-    tag = request.args.get('tag')
-    page = request.args.get('page')
-    return bcoderss.get_random_img_url(tag, page)
+    tags = request.args.getlist('tags') if request.args.getlist('tags') else ['最新']
+    page = request.args.get('page') if request.args.get('page') else 1
+    return bcoderss.get_random_img_url(tags, page)
