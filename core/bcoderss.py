@@ -9,17 +9,29 @@ headers = {
 }
 
 
-def get_random_img_url(tags, page=1):
-    tag = tags[random.randint(0, len(tags))-1]
+def get_img_page_urls(tag, page=1):
     url = url_base.format(tag, page)
     img_arr_page_res = requests.get(url=url, headers=headers)
     img_arr_page_selector = parsel.Selector(img_arr_page_res.text)
     img_urls = img_arr_page_selector.css('#main a::attr(href)').getall()
+    return img_urls
 
-    img_page_url = img_urls[random.randint(0, len(img_urls)-1)]
+
+def get_img_url(img_page_url):
     img_page_res = requests.get(url=img_page_url, headers=headers)
-
     img_selector = parsel.Selector(img_page_res.text)
     img = img_selector.xpath('/html/body/div[4]/img').getall()[0]
-
     return img.split('src="')[1].split('"')[0]
+
+
+def get_random_img_url(tags, page=1):
+    tag = tags[random.randint(0, len(tags)) - 1]
+    img_urls = get_img_page_urls(tag, page)
+    img_page_url = img_urls[random.randint(0, len(img_urls) - 1)]
+    return get_img_url(img_page_url)
+
+
+def get_random_img_urls(tags, page=1, size=1):
+    tag = tags[random.randint(0, len(tags)) - 1]
+    img_urls = get_img_page_urls(tag, page)
+    return [get_img_url(img_urls[random.randint(0, len(img_urls) - 1)]) for _ in range(0, int(size))]
