@@ -13,7 +13,7 @@ fields = {
 
 
 @bcoderss_route.route("/bcoderss/get_random_img_url", methods=["GET"])
-@pre.catch(fields)
+# @pre.catch(fields)
 def get_random_img_url():
     tags = request.args.getlist('tags') if request.args.getlist('tags') else ['最新']
     page = request.args.get('page') if request.args.get('page') else 1
@@ -21,7 +21,7 @@ def get_random_img_url():
 
 
 @bcoderss_route.route("/bcoderss/get_random_img_urls", methods=["GET"])
-@pre.catch(fields)
+# @pre.catch(fields)
 @return_json
 def get_random_img_urls():
     tags = request.args.getlist('tags') if request.args.getlist('tags') else ['最新']
